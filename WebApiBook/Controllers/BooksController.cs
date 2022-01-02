@@ -46,32 +46,31 @@ namespace WebApiBook.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutBook(int id, Book book)
+        public async Task<IActionResult> PutBook(int BookId, Book book)
         {
-            if (id != book.id)
+            if (BookId ==book)
             {
-                return BadRequest();
-            }
+                _context.Entry(book).State = EntityState.Modified;
 
-            _context.Entry(book).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!BookExists(id))
+                try
                 {
-                    return NotFound();
+                    await _context.SaveChangesAsync();
                 }
-                else
+                catch (DbUpdateConcurrencyException)
                 {
-                    throw;
+                    if (!BookExists(BookId))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
                 }
-            }
 
-            return NoContent();
+                return NoContent();
+            }
+            return BadRequest();
         }
 
         // POST: api/Books
@@ -83,14 +82,14 @@ namespace WebApiBook.Controllers
             _context.Book.Add(book);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetBook", new { id = book.id }, book);
+            return CreatedAtAction("GetBook", new { BookId = book }, book);
         }
 
         // DELETE: api/Books/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Book>> DeleteBook(int id)
+        public async Task<ActionResult<Book>> DeleteBook(int BookId)
         {
-            var book = await _context.Book.FindAsync(id);
+            var book = await _context.Book.FindAsync(BookId);
             if (book == null)
             {
                 return NotFound();
@@ -102,9 +101,9 @@ namespace WebApiBook.Controllers
             return book;
         }
 
-        private bool BookExists(int id)
+        private bool BookExists(int BookId)
         {
-            return _context.Book.Any(e => e.id == id);
+            return _context.Book.Any(e => e.BookId == BookId);
         }
     }
 }
