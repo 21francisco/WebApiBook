@@ -29,7 +29,7 @@ namespace WebApiBook.Controllers
         }
 
         // GET: api/Books/5
-        [HttpGet("{id}")]
+        [HttpGet("{BookId}")]
         public async Task<ActionResult<Book>> GetBook(int id)
         {
             var book = await _context.Book.FindAsync(id);
@@ -43,12 +43,11 @@ namespace WebApiBook.Controllers
         }
 
         // PUT: api/Books/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+
         [HttpPut("{id}")]
         public async Task<IActionResult> PutBook(int BookId, Book book)
         {
-            if (BookId ==book)
+            if (BookId == null)
             {
                 _context.Entry(book).State = EntityState.Modified;
 
@@ -73,9 +72,9 @@ namespace WebApiBook.Controllers
             return BadRequest();
         }
 
+
         // POST: api/Books
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+
         [HttpPost]
         public async Task<ActionResult<Book>> PostBook(Book book)
         {
@@ -86,7 +85,7 @@ namespace WebApiBook.Controllers
         }
 
         // DELETE: api/Books/5
-        [HttpDelete("{id}")]
+        [HttpDelete("{BookId}")]
         public async Task<ActionResult<Book>> DeleteBook(int BookId)
         {
             var book = await _context.Book.FindAsync(BookId);

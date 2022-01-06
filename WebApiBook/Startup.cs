@@ -12,6 +12,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using WebApiBook.Data;
+using Microsoft.OpenApi.Models;
 
 namespace WebApiBook
 {
@@ -31,11 +32,45 @@ namespace WebApiBook
 
             services.AddDbContext<WebApiBookContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("WebApiBookContext")));
+
+            services.AddSwaggerGen(c =>
+            {
+
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Api with swagger", Version = "v1" });
+
+
+
+            });
+
+
+
+
+
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+
+            app.UseSwagger();
+            app.UseDeveloperExceptionPage();
+
+
+            app.UseSwaggerUI(c =>
+
+
+
+            {
+
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                c.RoutePrefix = string.Empty;
+            
+            });
+
+
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
